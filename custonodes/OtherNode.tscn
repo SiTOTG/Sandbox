@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://dsvpw0mni0b4j"]
+
+[ext_resource type="Script" path="res://custonodes/OtherNode.gd" id="1_2hqig"]
+[ext_resource type="PackedScene" uid="uid://dn7rc3yxrqq0y" path="res://custonodes/CustomNode.tscn" id="2_kpc14"]
+
+[node name="OtherNode" type="Node2D"]
+script = ExtResource("1_2hqig")
+
+[node name="CustomNode" parent="." instance=ExtResource("2_kpc14")]

@@ -1,0 +1,102 @@
+[gd_scene load_steps=7 format=3 uid="uid://x66fjtbxdqlb"]
+
+[ext_resource type="Texture2D" uid="uid://c7upicpoc7pvp" path="res://icon.svg" id="1_dpl7k"]
+[ext_resource type="Script" path="res://behaviortests/Cook.gd" id="2_tg1p5"]
+[ext_resource type="Script" path="res://addons/yet_another_behavior_tree/src/Nodes/BTRoot.gd" id="3_t3vrs"]
+[ext_resource type="Script" path="res://addons/yet_another_behavior_tree/src/Nodes/Composite/BTSequence.gd" id="4_d1g8i"]
+[ext_resource type="Script" path="res://behaviortests/custom_action.gd" id="5_lbug3"]
+[ext_resource type="Script" path="res://addons/yet_another_behavior_tree/src/Nodes/Leaves/BTActionCallable.gd" id="6_lsfc7"]
+
+[node name="World" type="Node2D"]
+
+[node name="Raw" type="Sprite2D" parent="."]
+position = Vector2(148, 262)
+texture = ExtResource("1_dpl7k")
+
+[node name="Label" type="Label" parent="Raw"]
+offset_left = -59.0
+offset_top = -86.0
+offset_right = 56.0
+offset_bottom = -63.0
+text = "Raw"
+
+[node name="Ingredient" type="Sprite2D" parent="."]
+position = Vector2(510, 263)
+texture = ExtResource("1_dpl7k")
+
+[node name="Label" type="Label" parent="Ingredient"]
+offset_left = -59.0
+offset_top = -86.0
+offset_right = 56.0
+offset_bottom = -63.0
+text = "Ingredient"
+
+[node name="Stock" type="Label" parent="Ingredient"]
+offset_left = -58.0
+offset_top = -113.0
+offset_right = 57.0
+offset_bottom = -87.0
+text = "0"
+
+[node name="ProgressBar" type="ProgressBar" parent="Ingredient"]
+offset_left = -58.0
+offset_top = -139.0
+offset_right = 61.0
+offset_bottom = -112.0
+
+[node name="Food" type="Sprite2D" parent="."]
+position = Vector2(846, 259)
+texture = ExtResource("1_dpl7k")
+
+[node name="Label" type="Label" parent="Food"]
+offset_left = -59.0
+offset_top = -86.0
+offset_right = 56.0
+offset_bottom = -63.0
+text = "Food"
+
+[node name="Stock" type="Label" parent="Food"]
+offset_left = -58.0
+offset_top = -113.0
+offset_right = 57.0
+offset_bottom = -87.0
+text = "0"
+
+[node name="ProgressBar" type="ProgressBar" parent="Food"]
+offset_left = -58.0
+offset_top = -139.0
+offset_right = 61.0
+offset_bottom = -112.0
+
+[node name="Served" type="Sprite2D" parent="."]
+position = Vector2(781, 569)
+texture = ExtResource("1_dpl7k")
+
+[node name="Label" type="Label" parent="Served"]
+offset_left = -59.0
+offset_top = -86.0
+offset_right = 56.0
+offset_bottom = -63.0
+text = "Served"
+
+[node name="Cook" type="Sprite2D" parent="."]
+self_modulate = Color(1, 0.454902, 0.537255, 1)
+position = Vector2(161, 546)
+scale = Vector2(0.515625, 0.515625)
+texture = ExtResource("1_dpl7k")
+script = ExtResource("2_tg1p5")
+
+[node name="BTRoot" type="Node" parent="Cook"]
+script = ExtResource("3_t3vrs")
+actor_path = NodePath("..")
+
+[node name="BTSequence" type="Node" parent="Cook/BTRoot"]
+script = ExtResource("4_d1g8i")
+
+[node name="BTAction" type="Node" parent="Cook/BTRoot/BTSequence"]
+script = ExtResource("5_lbug3")
+
+[node name="BTActionCallable" type="Node" parent="Cook/BTRoot/BTSequence"]
+script = ExtResource("6_lsfc7")
+method_owner_path = NodePath("../../..")
+method_name = "action"
