@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="Material1" load_steps=2 format=3 uid="uid://b2itsp2nitajq"]
+
+[ext_resource type="Script" path="res://behaviortests/material1.gd" id="1_87rxs"]
+
+[resource]
+script = ExtResource("1_87rxs")
