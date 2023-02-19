@@ -3,4 +3,5 @@
 [ext_resource type="Script" path="res://behaviortests/material1.gd" id="1_87rxs"]
 
 [resource]
+resource_name = "Wood"
 script = ExtResource("1_87rxs")

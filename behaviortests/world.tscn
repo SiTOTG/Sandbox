@@ -1,16 +1,23 @@
-[gd_scene load_steps=8 format=3 uid="uid://x66fjtbxdqlb"]
+[gd_scene load_steps=12 format=3 uid="uid://x66fjtbxdqlb"]
 
 [ext_resource type="PackedScene" uid="uid://cecqg3glamx1b" path="res://behaviortests/producer.tscn" id="1_322d1"]
 [ext_resource type="Texture2D" uid="uid://c7upicpoc7pvp" path="res://icon.svg" id="1_dpl7k"]
 [ext_resource type="Script" path="res://behaviortests/Cook.gd" id="2_tg1p5"]
 [ext_resource type="Script" path="res://addons/yet_another_behavior_tree/src/Nodes/BTRoot.gd" id="3_t3vrs"]
 [ext_resource type="Script" path="res://addons/yet_another_behavior_tree/src/Nodes/Composite/BTSequence.gd" id="4_d1g8i"]
-[ext_resource type="Script" path="res://behaviortests/custom_action.gd" id="5_lbug3"]
-[ext_resource type="Script" path="res://addons/yet_another_behavior_tree/src/Nodes/Leaves/BTActionCallable.gd" id="6_lsfc7"]
+[ext_resource type="Script" path="res://behaviortests/SelectMaterial.gd" id="6_y4bi8"]
+[ext_resource type="Script" path="res://behaviortests/FindNearestProducer.gd" id="7_1f5ux"]
+[ext_resource type="Script" path="res://behaviortests/GoToTarget.gd" id="8_8vexm"]
+[ext_resource type="Script" path="res://behaviortests/IsOnTarget.gd" id="9_wdvod"]
+[ext_resource type="Script" path="res://behaviortests/WoodLabel.gd" id="10_hn3dy"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pbbg3"]
+size = Vector2(131.879, 128)
 
 [node name="World" type="Node2D"]
 
 [node name="Raw" parent="." instance=ExtResource("1_322d1")]
+position = Vector2(151, 251)
 
 [node name="Ingredient" parent="." instance=ExtResource("1_322d1")]
 position = Vector2(488, 262)
@@ -40,14 +47,50 @@ script = ExtResource("2_tg1p5")
 script = ExtResource("3_t3vrs")
 actor_path = NodePath("..")
 
-[node name="BTSequence" type="Node" parent="Cook/BTRoot"]
+[node name="FetchMaterial" type="Node" parent="Cook/BTRoot"]
 script = ExtResource("4_d1g8i")
 
-[node name="CustomAction" type="Node" parent="Cook/BTRoot/BTSequence"]
-script = ExtResource("5_lbug3")
+[node name="SelectMaterial" type="Node" parent="Cook/BTRoot/FetchMaterial"]
+script = ExtResource("6_y4bi8")
 
-[node name="BTActionCallable" type="Node" parent="Cook/BTRoot/BTSequence"]
-script = ExtResource("6_lsfc7")
-method_owner_path = NodePath("../../..")
-method_name = "go_hit_on"
-method_arguments = Array[String](["blackboard"])
+[node name="FindNearestProducer" type="Node" parent="Cook/BTRoot/FetchMaterial"]
+script = ExtResource("7_1f5ux")
+
+[node name="GoToTarget" type="Node" parent="Cook/BTRoot/FetchMaterial"]
+script = ExtResource("8_8vexm")
+
+[node name="GrabMaterial" type="Node" parent="Cook/BTRoot/FetchMaterial"]
+script = ExtResource("9_wdvod")
+
+[node name="InteractRange" type="Area2D" parent="Cook"]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Cook/InteractRange"]
+shape = SubResource("RectangleShape2D_pbbg3")
+
+[node name="FetchTimer" type="Timer" parent="Cook"]
+wait_time = 0.4
+one_shot = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Label" type="Label" parent="CanvasLayer/HBoxContainer"]
+layout_mode = 2
+text = "Materials carried:"
+
+[node name="WoodLabel" type="Label" parent="CanvasLayer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Wood: 0"
+script = ExtResource("10_hn3dy")
+
+[connection signal="wood_value_changed" from="Cook" to="CanvasLayer/HBoxContainer/WoodLabel" method="_on_cook_wood_value_changed"]
+[connection signal="timeout" from="Cook/FetchTimer" to="Cook" method="_on_fetch_timer_timeout"]

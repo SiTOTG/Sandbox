@@ -37,6 +37,11 @@ toggle_console={
 ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="Cook"
+2d_physics/layer_2="ProducerProximity"
+
 [panku]
 
 toggle_console_action="toggle_console"

@@ -1,11 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://cecqg3glamx1b"]
+[gd_scene load_steps=5 format=3 uid="uid://cecqg3glamx1b"]
 
 [ext_resource type="Texture2D" uid="uid://c7upicpoc7pvp" path="res://icon.svg" id="1_b6jmb"]
 [ext_resource type="Script" path="res://behaviortests/producer.gd" id="2_hpl46"]
 [ext_resource type="Resource" uid="uid://b2itsp2nitajq" path="res://behaviortests/wood.tres" id="3_fj52n"]
 
-[node name="Raw" type="Sprite2D"]
-position = Vector2(148, 262)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dcisg"]
+size = Vector2(252, 226)
+
+[node name="Raw" type="Sprite2D" groups=["Producer"]]
 texture = ExtResource("1_b6jmb")
 script = ExtResource("2_hpl46")
 produces = ExtResource("3_fj52n")
@@ -31,4 +33,14 @@ offset_right = 61.0
 offset_bottom = -112.0
 
 [node name="ProductionTimer" type="Timer" parent="."]
+wait_time = 3.0
 one_shot = true
+
+[node name="Proximity" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Proximity"]
+shape = SubResource("RectangleShape2D_dcisg")
+
+[connection signal="timeout" from="ProductionTimer" to="." method="_on_production_timer_timeout"]
