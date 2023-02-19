@@ -19,14 +19,22 @@ func action() -> int:
 
 func get_nearest_production_for(target_material: Material1) -> Producer:
 	var producers = get_tree().get_nodes_in_group("Producer") as Array[Producer]
-#	var nearest_producer: Producer = producers[0]
-#	for node in producers:
-#		var producer: Producer = node as Producer
-#		if not producer: continue
-#		print(producer.produces.name)
-#		pass
-#
-	return producers[0]
+
+	# Filter only producers that produce this specific material
+	producers = producers.filter(func (producer: Producer): return producer.produces.resource_path == target_material.resource_path)
+	if producers.is_empty(): return null
+
+	# Find nearest producer
+	var nearest_producer: Producer = producers[0]
+	var nearest_distance = global_position.distance_to(nearest_producer.global_position)
+	for node in producers:
+		var producer: Producer = node as Producer
+		var distance = global_position.distance_to(producer.global_position)
+		if distance < nearest_distance:
+			nearest_distance = distance
+			nearest_producer = producer
+
+	return nearest_producer
 
 func _process(delta):
 	if is_instance_valid(destination):
